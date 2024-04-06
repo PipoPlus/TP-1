@@ -3,6 +3,7 @@ package Concurso;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,81 +12,65 @@ class ConcursoTest {
 
     @Test
     void inscribirParticipante_DentroDelPeriodoDeInscripcion() throws ParseException {
-        // Arrange
-        Concurso concurso = new Concurso("Concurso1", "01/03/2024", "21/06/2024");
+        LocalDateTime fechaInicio = LocalDateTime.now().minusDays(2);
+        LocalDateTime fechaCierre = LocalDateTime.now().plusDays(2);
+
+        Concurso concurso = new Concurso("Concurso1", fechaInicio, fechaCierre);
         Participante participante = new Participante("Juan");
 
-        // Act
-        concurso.inscribirParticipante(participante);
+        participante.inscribirse(concurso);
 
-        // Assert
         assertTrue(concurso.listaParticipantes.contains(participante));
     }
 
     @Test
     void inscribirParticipante_FueraDelPeriodoDeInscripcion() throws ParseException {
-        // Arrange
-        Concurso concurso = new Concurso("Concurso1", "01/03/2024", "10/03/2024");
-        Participante participante = new Participante("Juan");
+        LocalDateTime fechaInicio = LocalDateTime.now().plusDays(2);
+        LocalDateTime fechaCierre = LocalDateTime.now().plusDays(1);
 
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> {
-            concurso.inscribirParticipante(participante);
+        Concurso concurso = new Concurso("Concurso2", fechaInicio, fechaCierre);
+        Participante participante = new Participante("Julian");
+
+        assertThrows(RuntimeException.class, () -> {
+            participante.inscribirse(concurso);
         });
     }
 
     @Test
     void inscribirParticipante_EnFechaInicioConPuntajeExtra() throws ParseException {
-        // Arrange
-        Concurso concurso = new Concurso("Concurso1", "01/03/2024", "21/06/2024");
-        Participante participante = new Participante("Juan");
-        concurso.fechaInicio = new Date(); // setting current date as start date
+        LocalDateTime fechaInicio = LocalDateTime.now();
+        LocalDateTime fechaCierre = LocalDateTime.now().plusDays(2);
 
-        // Act
-        concurso.inscribirParticipante(participante);
+        Concurso concurso = new Concurso("Concurso3", fechaInicio, fechaCierre);
+        Participante participante = new Participante("Khalil");
 
-        // Assert
-        assertEquals(10, participante.puntaje);
+        participante.inscribirse(concurso);
+
+        assertEquals(10, participante.getPuntos());
     }
 
-    @Test
-    void esFechaValidaParaInscripcion_FechaDentroDelPeriodo() throws ParseException {
-        // Arrange
-        Concurso concurso = new Concurso("Concurso1", "01/03/2024", "21/06/2024");
-        Date fechaInscripcion = new Date(); // current date
 
-        // Act & Assert
-        assertTrue(concurso.esFechaValidaParaInscripcion(fechaInscripcion));
-    }
-
-    @Test
-    void esFechaValidaParaInscripcion_FechaFueraDelPeriodo() throws ParseException {
-        // Arrange
-        Concurso concurso = new Concurso("Concurso1", "01/03/2024", "10/03/2024");
-        Date fechaInscripcion = new Date(System.currentTimeMillis() + 100000000); // Some future date
-
-        // Act & Assert
-        assertFalse(concurso.esFechaValidaParaInscripcion(fechaInscripcion));
-    }
 
     @Test
     void participanteExiste_PorParticipanteExistente() throws ParseException {
-        // Arrange
-        Concurso concurso = new Concurso("Concurso1", "01/03/2024", "21/06/2024");
-        Participante participante = new Participante("Juan");
-        concurso.listaParticipantes.add(participante);
+        LocalDateTime fechaInicio = LocalDateTime.now();
+        LocalDateTime fechaCierre = LocalDateTime.now().plusDays(2);
+        Concurso concurso = new Concurso("Concurso4", fechaInicio, fechaCierre);
+        Participante participante = new Participante("Leo");
+        participante.inscribirse(concurso);
 
-        // Act & Assert
+
         assertTrue(concurso.participanteExiste(participante));
     }
 
     @Test
     void participanteExiste_PorParticipanteNoExistente() throws ParseException {
-        // Arrange
-        Concurso concurso = new Concurso("Concurso1", "01/03/2024", "10/03/2024");
-        Participante participante = new Participante("Juan");
+        LocalDateTime fechaInicio = LocalDateTime.now();
+        LocalDateTime fechaCierre = LocalDateTime.now().plusDays(2);
+        Concurso concurso = new Concurso("Concurso5", fechaInicio, fechaCierre);
+        Participante participante = new Participante("Ana");
 
-        // Act & Assert
+
         assertFalse(concurso.participanteExiste(participante));
     }
 

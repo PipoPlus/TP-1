@@ -1,52 +1,45 @@
 package Concurso;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Concurso {
 
     String nombreConcurso;
-    Date fechaInicio, fechaCierre;
+    LocalDateTime fechaInicio, fechaCierre;
     List<Participante> listaParticipantes = new ArrayList<>();
 
+    private static final int PUNTOS_EXTRA = 10;
 
-    public Concurso(String nombre, String fechaI, String fechaC) throws ParseException {
+
+    public Concurso(String nombre, LocalDateTime fechaI, LocalDateTime fechaC) throws ParseException {
 
         this.nombreConcurso = nombre;
 
-
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-
-        this.fechaInicio = formato.parse(fechaI);
-        this.fechaCierre = formato.parse(fechaC);
+        this.fechaInicio = fechaI;
+        this.fechaCierre = fechaC;
 
     }
 
-    public void inscribirParticipante(Participante participante) {
+    public String getNombreConcurso() {
+        return nombreConcurso;
+    }
 
-        Date fechaInscripcion = new Date();
-        if (esFechaValidaParaInscripcion(fechaInscripcion)) {
-
-            listaParticipantes.add(participante);
-            if (fechaInscripcion.compareTo(fechaInicio) == 0) {
-
-                participante.sumarPuntaje(10);
-
-            }
-
+    public int calcularPuntos(Participante participante) {
+        LocalDateTime fechaActual = LocalDateTime.now();
+        if (fechaActual.isEqual(fechaInicio)) {
+            return 10;
         } else {
-
-            throw new IllegalArgumentException("La fecha de inscripción no está dentro del período permitido.");
-
+            return 0;
         }
-
     }
 
-    public boolean esFechaValidaParaInscripcion(Date fechaInscripcion) {
-        return fechaInscripcion.compareTo(fechaInicio) >= 0 && fechaInscripcion.compareTo(fechaCierre) <= 0;
+
+    public boolean estaAbierto() {
+        LocalDateTime fechaActual = LocalDateTime.now();
+        return !fechaActual.isBefore(fechaInicio) && !fechaActual.isAfter(fechaCierre);
     }
 
     public boolean participanteExiste(Participante participante) {
