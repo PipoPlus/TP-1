@@ -1,7 +1,4 @@
-package Concurso;
-
-import java.text.ParseException;
-import java.util.Date;
+package Punto1.Concurso;
 
 public class Main {
 //    public static void main(String[] args) throws ParseException {

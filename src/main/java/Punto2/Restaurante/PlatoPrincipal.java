@@ -1,4 +1,4 @@
-package Restaurante;
+package Punto2.Restaurante;
 
 public class PlatoPrincipal extends Item {
     private String tipo; // Por ejemplo: Entrada, Plato principal, Postre

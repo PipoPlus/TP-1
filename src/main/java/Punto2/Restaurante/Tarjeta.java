@@ -1,4 +1,4 @@
-package Restaurante;
+package Punto2.Restaurante;
 
 public abstract class Tarjeta {
     private String tipo;

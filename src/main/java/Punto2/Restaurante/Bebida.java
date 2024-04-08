@@ -1,4 +1,4 @@
-package Restaurante;
+package Punto2.Restaurante;
 
 public class Bebida extends Item {
     private boolean alcoholica;

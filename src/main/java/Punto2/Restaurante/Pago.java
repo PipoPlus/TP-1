@@ -1,4 +1,6 @@
-package Restaurante;
+package Punto2.Restaurante;
+
+import Punto1.Concurso.ProveedorDeFechas;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,16 +12,23 @@ public class Pago {
     private Pedido pedido;
     private Tarjeta tarjeta;
 
-    public Pago(Pedido pedido, Tarjeta tarjeta) {
+    private RegistroCobro registro;
+
+    private ProveedorDeFechas  proovedorFecha;
+
+    public Pago(Pedido pedido, Tarjeta tarjeta, RegistroCobro registro,ProveedorDeFechas proovedorFecha) {
         this.pedido = pedido;
         this.tarjeta = tarjeta;
+        this.registro = registro;
+        this.proovedorFecha = proovedorFecha;
+
     }
     public double calcularDescuento() {
         double montoDescontado = obtenerMonto();
 
         pedido.confirmarPedido();
 
-        guardarCobro();
+        guardarPago();
         return montoDescontado;
 
     }
@@ -33,18 +42,9 @@ public class Pago {
         return montoDescontado;
     }
 
-    private void guardarCobro() {
-        String nombreArchivo = "cobros.txt";
-        try (FileWriter fileWriter = new FileWriter(nombreArchivo,true);
-            PrintWriter printWriter = new PrintWriter(fileWriter)) {
+    private void guardarPago() {
 
-            LocalDateTime fechaAhora = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            printWriter.println(formatter.format(fechaAhora) + " || " + obtenerMonto());
-
-            } catch (IOException e){
-            System.err.println("Error al guardar la inscripción: " + e.getMessage());
-        }
+        this.registro.registro(this.proovedorFecha.fecha(), obtenerMonto());
 
     }
 

@@ -1,4 +1,4 @@
-package Restaurante;
+package Punto2.Restaurante;
 
 public class MasterCard extends Tarjeta {
     public MasterCard() {

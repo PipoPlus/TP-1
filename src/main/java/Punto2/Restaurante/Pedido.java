@@ -1,4 +1,4 @@
-package Restaurante;
+package Punto2.Restaurante;
 
 import java.util.ArrayList;
 import java.util.List;
